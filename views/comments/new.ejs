@@ -1,0 +1,13 @@
+<% include ../partials/header%>
+<!-- <img src="avatars/student.png" alt="" /> -->
+<div class="ui main text container segment">
+    <div class="ui huge header">Add new comment</div>
+    <form class="ui form" action="/blogs/<%=blog._id%>/comments" method="POST">
+        <div class="field">
+            <label>Comment</label>
+            <textarea name="comment[text]"></textarea>
+        </div>
+        <input class="ui black basic button" type="submit">
+    </form>
+</div>
+<% include ../partials/footer%>

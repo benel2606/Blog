@@ -1,0 +1,37 @@
+<% include ./partials/header%>
+
+<form action="/register" method="POST">
+    <div class="ui text main container">
+        <h2 class="ui blue header">Sign Up</h2>
+        <div class="ui placeholder segment">
+            <div class="ui two column very relaxed stackable grid">
+                <div class="centered column">
+                    <div class="ui form">
+                        <div class="field">
+                            <label>Username</label>
+                            <div class="ui small icon input">
+                                <input type="text" name="username" placeholder="username">
+                                <i class="user icon"></i>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Password</label>
+                            <div class="ui small icon input">
+                                <input type="password" name="password" placeholder="password">
+                                <i class="lock icon"></i>
+                            </div>
+                        </div>
+                        <button type="submit" class="ui blue submit button">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- <form action="/register" method="POST">
+    <input type="text" name="username" placeholder="username">
+    <input type="password" name="password" placeholder="password">
+    <button>Sign Up!</button>
+</form> -->
+<% include ./partials/footer%>
