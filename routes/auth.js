@@ -5,7 +5,7 @@ var User = require("../models/user");
 
 //Register
 router.get("/register", function (req, res) {
-    res.render("register");
+    res.render("auth/register");
 });
 //Sign up
 router.post("/register", function (req, res) {
@@ -15,7 +15,7 @@ router.post("/register", function (req, res) {
     User.register(newUser, req.body.password, function (err, user) {
         if (err) {
             console.log(err);
-            return res.render("register");
+            return res.render("auth/register");
         }
         passport.authenticate("local")(req, res, function () {
             res.redirect("/blogs");
@@ -24,7 +24,7 @@ router.post("/register", function (req, res) {
 });
 //Login
 router.get("/login", function (req, res) {
-    res.render("login");
+    res.render("auth/login");
 });
 router.post(
     "/login",
@@ -45,6 +45,6 @@ function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
-    res.redirect("/login");
+    res.redirect("login");
 }
 module.exports = router;

@@ -12,7 +12,9 @@
     <div class="ui fixed inverted menu">
         <div class="header item"><i class="medapps icon"></i> Blog Site </div>
         <a href="/" class="item">Home</a>
+        <% if(currentUser){%>
         <a href="/blogs/new" class="item">New Post</a>
+        <%}%>
         <div class="right menu">
             <% if(!currentUser){%>
             <a href="/register" class="ui item">
