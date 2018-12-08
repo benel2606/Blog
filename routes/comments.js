@@ -36,12 +36,40 @@ router.post("/blogs/:id/comments", isLoggedIn, function (req, res) {
         }
     });
 });
+//COMMENT DELETE
+router.delete("/blogs/:id/comments/:comment_id", checkCommentAuthorAndLoggedIn, function (req, res) {
+    Comment.findByIdAndRemove(req.params.comment_id, function (err) {
+        if (err) {
+            res.redirect("back");
+        } else {
+            res.redirect("/blogs/" + req.params.id)
+        }
+    });
+})
 
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
     res.redirect("/login");
+}
+
+function checkCommentAuthorAndLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        Comment.findById(req.params.comment_id, function (err, foundComment) {
+            if (err) {
+                res.redirect("back");
+            } else {
+                if (foundComment.author.id.equals(req.user._id)) {
+                    next();
+                } else {
+                    res.redirect("back");
+                }
+            }
+        });
+    } else {
+        res.redirect("back");
+    }
 }
 
 module.exports = router;

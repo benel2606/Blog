@@ -44,9 +44,13 @@
                 <div class="text">
                     <%=comment.text%></a>
                 </div>
-                <div class="actions">
-                    <a class="reply">Reply</a>
-                </div>
+                <%if (currentUser && comment.author.id.equals(currentUser._id)){%>
+                <form action="/blogs/<%=blog._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST">
+                    <button class="ui basic button mini">
+                        Delete
+                    </button>
+                </form>
+                <%}%>
             </div>
         </div>
         <%})%>

@@ -31,7 +31,6 @@ router.post("/blogs", isLoggedIn, function (req, res) {
         id: req.user._id,
         username: req.user.username
     }
-    //req.body.blog
     var newObjBlog = {
         title: title,
         image: image,
