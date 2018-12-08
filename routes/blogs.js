@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var Blog = require("../models/blogs");
+var middleware = require("../middleware")
 
 router.get("/", function (req, res) {
     res.redirect("/blogs");
@@ -19,11 +20,11 @@ router.get("/blogs", function (req, res) {
     });
 });
 //NEW
-router.get("/blogs/new", isLoggedIn, function (req, res) {
+router.get("/blogs/new", middleware.isLoggedIn, function (req, res) {
     res.render("blogs/new");
 });
 //CREATE
-router.post("/blogs", isLoggedIn, function (req, res) {
+router.post("/blogs", middleware.isLoggedIn, function (req, res) {
     var title = req.body.blog.title;
     var image = req.body.blog.image;
     var body = req.body.blog.body;
@@ -60,7 +61,7 @@ router.get("/blogs/:id", function (req, res) {
         });
 });
 //EDIT
-router.get("/blogs/:id/edit", checkPostAuthorAndLoggedIn, function (req, res) {
+router.get("/blogs/:id/edit", middleware.checkPostAuthorAndLoggedIn, function (req, res) {
     Blog.findById(req.params.id, function (err, foundBlog) {
         if (err) {
             res.redirect("/blogs");
@@ -85,7 +86,7 @@ router.put("/blogs/:id", function (req, res) {
     });
 });
 //DELETE
-router.delete("/blogs/:id", checkPostAuthorAndLoggedIn, function (req, res) {
+router.delete("/blogs/:id", middleware.checkPostAuthorAndLoggedIn, function (req, res) {
     Blog.findByIdAndDelete(req.params.id, function (err) {
         if (err) {
             res.redirect("/blogs");
@@ -94,30 +95,5 @@ router.delete("/blogs/:id", checkPostAuthorAndLoggedIn, function (req, res) {
         }
     });
 });
-
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect("/login");
-}
-
-function checkPostAuthorAndLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
-        Blog.findById(req.params.id, function (err, foundBlog) {
-            if (err) {
-                res.redirect("back");
-            } else {
-                if (foundBlog.author.id.equals(req.user._id)) {
-                    next();
-                } else {
-                    res.redirect("back");
-                }
-            }
-        });
-    } else {
-        res.redirect("back");
-    }
-}
 
 module.exports = router;

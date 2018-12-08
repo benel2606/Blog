@@ -2,9 +2,10 @@ var express = require("express");
 var router = express.Router();
 var Blog = require("../models/blogs");
 var Comment = require("../models/comments");
+var middleware = require("../middleware")
 
 //COMMENT NEW 
-router.get("/blogs/:id/comments/new", isLoggedIn, function (req, res) {
+router.get("/blogs/:id/comments/new", middleware.isLoggedIn, function (req, res) {
     Blog.findById(req.params.id, function (err, blog) {
         if (err) {
             console.log(err);
@@ -16,7 +17,7 @@ router.get("/blogs/:id/comments/new", isLoggedIn, function (req, res) {
     });
 });
 //COMMENT CREATE
-router.post("/blogs/:id/comments", isLoggedIn, function (req, res) {
+router.post("/blogs/:id/comments", middleware.isLoggedIn, function (req, res) {
     Blog.findById(req.params.id, function (err, foundBlog) {
         if (err) {
             redirect("/blogs");
@@ -37,7 +38,7 @@ router.post("/blogs/:id/comments", isLoggedIn, function (req, res) {
     });
 });
 //COMMENT DELETE
-router.delete("/blogs/:id/comments/:comment_id", checkCommentAuthorAndLoggedIn, function (req, res) {
+router.delete("/blogs/:id/comments/:comment_id", middleware.checkCommentAuthorAndLoggedIn, function (req, res) {
     Comment.findByIdAndRemove(req.params.comment_id, function (err) {
         if (err) {
             res.redirect("back");
@@ -47,29 +48,5 @@ router.delete("/blogs/:id/comments/:comment_id", checkCommentAuthorAndLoggedIn, 
     });
 })
 
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect("/login");
-}
-
-function checkCommentAuthorAndLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
-        Comment.findById(req.params.comment_id, function (err, foundComment) {
-            if (err) {
-                res.redirect("back");
-            } else {
-                if (foundComment.author.id.equals(req.user._id)) {
-                    next();
-                } else {
-                    res.redirect("back");
-                }
-            }
-        });
-    } else {
-        res.redirect("back");
-    }
-}
 
 module.exports = router;
