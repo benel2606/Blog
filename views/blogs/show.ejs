@@ -19,7 +19,7 @@
                     <%-blog.body%>
                 </p>
             </div>
-
+            <%if (currentUser && blog.author.id.equals(currentUser._id)){%>
             <div class="ui buttons">
                 <a class="ui positive button" href="/blogs/<%=blog._id%>/edit">Edit</a>
                 <div class="or"></div>
@@ -27,6 +27,7 @@
                     <button class="ui negetive button">Delete</button>
                 </form>
             </div>
+            <%}%>
         </div>
     </div>
     <div class="ui comments">

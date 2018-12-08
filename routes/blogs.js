@@ -61,7 +61,7 @@ router.get("/blogs/:id", function (req, res) {
         });
 });
 //EDIT
-router.get("/blogs/:id/edit", isLoggedIn, function (req, res) {
+router.get("/blogs/:id/edit", checkPostAuthorAndLoggedIn, function (req, res) {
     Blog.findById(req.params.id, function (err, foundBlog) {
         if (err) {
             res.redirect("/blogs");
@@ -86,7 +86,7 @@ router.put("/blogs/:id", function (req, res) {
     });
 });
 //DELETE
-router.delete("/blogs/:id", isLoggedIn, function (req, res) {
+router.delete("/blogs/:id", checkPostAuthorAndLoggedIn, function (req, res) {
     Blog.findByIdAndDelete(req.params.id, function (err) {
         if (err) {
             res.redirect("/blogs");
@@ -101,6 +101,24 @@ function isLoggedIn(req, res, next) {
         return next();
     }
     res.redirect("/login");
+}
+
+function checkPostAuthorAndLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        Blog.findById(req.params.id, function (err, foundBlog) {
+            if (err) {
+                res.redirect("back");
+            } else {
+                if (foundBlog.author.id.equals(req.user._id)) {
+                    next();
+                } else {
+                    res.redirect("back");
+                }
+            }
+        });
+    } else {
+        res.redirect("back");
+    }
 }
 
 module.exports = router;
