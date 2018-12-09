@@ -6,7 +6,8 @@ var bodyParser = require("body-parser"),
   User = require("./models/user.js"),
   passport = require("passport"),
   LocalStrategy = require("passport-local"),
-  path = require("path");
+  path = require("path"),
+  flash = require("connect-flash");
 
 var blogRoutes = require("./routes/blogs.js"),
   commentRoutes = require("./routes/comments.js"),
@@ -37,12 +38,15 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use(function (req, res, next) {
   res.locals.currentUser = req.user;
+  res.locals.error = req.flash("error");
+  res.locals.success = req.flash("success");
   next();
 });
 

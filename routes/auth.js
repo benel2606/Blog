@@ -14,10 +14,13 @@ router.post("/register", function (req, res) {
     });
     User.register(newUser, req.body.password, function (err, user) {
         if (err) {
-            console.log(err);
-            return res.render("auth/register");
+            //console.log(err);
+            return res.render("auth/register", {
+                "error": err.message
+            });
         }
         passport.authenticate("local")(req, res, function () {
+            req.flash("success", user.username + " wSelcome to blog!");
             res.redirect("/blogs");
         });
     });
@@ -37,14 +40,8 @@ router.post(
 //Logout
 router.get("/logout", function (req, res) {
     req.logout();
+    req.flash("success", "Logged you out!");
     res.redirect("/blogs");
 });
 
-
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect("login");
-}
 module.exports = router;
