@@ -21,6 +21,7 @@ node app.js
 ```
 ### NPM Packages
 - body-parser
+- connect-flash
 - ejs
 - express
 - express-session
